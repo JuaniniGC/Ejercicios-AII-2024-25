@@ -7,8 +7,6 @@ from tkinter import messagebox
 import sqlite3
 import re
 
-PAGINAS = 2  # nÃºmero de pÃ¡ginas
-
 # lineas para evitar error SSL
 import os, ssl
 
