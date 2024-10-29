@@ -32,7 +32,7 @@ def crea_index():
         if not os.path.exists(dirindex):
             os.mkdir(dirindex)
     if not len(os.listdir(dirindex))==0:
-        respuesta = messagebox.askyesno("Confirmar","Indice no vacÃ­o. Desea reindexar?") 
+        respuesta = messagebox.askyesno("Confirmar","Indice no vacio. Desea reindexar?") 
         if respuesta:
             carga()           
     else:
