@@ -1,0 +1,51 @@
+name: Label Issues Based on Dropdown Selections
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  add-labels:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up GitHub CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "GitHub CLI configured"
+
+      - name: Extract and Apply Labels Based on Dropdown Selections
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          # Extrae el cuerpo completo del issue
+          ISSUE_BODY=$(gh issue view $ISSUE_NUMBER --json body --jq '.body')
+
+          # Verifica cada campo y asigna etiquetas según las selecciones
+          
+          # Para Priority
+          if echo "$ISSUE_BODY" | grep -q "Priority:\s*High"; then
+            gh issue edit $ISSUE_NUMBER --add-label "High Priority"
+          elif echo "$ISSUE_BODY" | grep -q "Priority:\s*Medium"; then
+            gh issue edit $ISSUE_NUMBER --add-label "Medium Priority"
+          elif echo "$ISSUE_BODY" | grep -q "Priority:\s*Low"; then
+            gh issue edit $ISSUE_NUMBER --add-label "Low Priority"
+          fi
+
+          # Para Dificulty
+          if echo "$ISSUE_BODY" | grep -q "Dificulty:\s*Difficult"; then
+            gh issue edit $ISSUE_NUMBER --add-label "Difficult"
+          elif echo "$ISSUE_BODY" | grep -q "Dificulty:\s*Medium"; then
+            gh issue edit $ISSUE_NUMBER --add-label "Medium Difficulty"
+          elif echo "$ISSUE_BODY" | grep -q "Dificulty:\s*Easy"; then
+            gh issue edit $ISSUE_NUMBER --add-label "Easy"
+          fi
+
+          # Para Fusion Change Relevance
+          if echo "$ISSUE_BODY" | grep -q "Fusion change relevance:\s*Ship"; then
+            gh issue edit $ISSUE_NUMBER --add-label "Low Relevance"
+          elif echo "$ISSUE_BODY" | grep -q "Fusion change relevance:\s*Show"; then
+            gh issue edit $ISSUE_NUMBER --add-label "Medium Relevance"
+          elif echo "$ISSUE_BODY" | grep -q "Fusion change relevance:\s*Ask"; then
+            gh issue edit $ISSUE_NUMBER --add-label "High Relevance"
+          fi

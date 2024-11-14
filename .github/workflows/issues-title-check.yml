@@ -1,0 +1,24 @@
+name: Issue Title Validation
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  title-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check issue title format
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          # Define el formato exacto requerido: WI <nombre_WI>-feature <funcionalidad>
+          REQUIRED_FORMAT="^WI [A-Za-z0-9_]+-feature [A-Za-z0-9_]+$"
+          
+          # Verifica si el título del issue cumple con el formato
+          if [[ ! "$ISSUE_TITLE" =~ $REQUIRED_FORMAT ]]; then
+            echo "El título del issue no cumple con el formato requerido: 'WI <nombre_WI>-feature <funcionalidad>'"
+            echo "::error::Formato de título de issue incorrecto"
+            exit 1
+          fi
